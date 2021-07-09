@@ -1,0 +1,20 @@
+{
+  "name": "discord-kim-bot",
+  "version": "1.0.0",
+  "description": "discord bot in js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-kimbot:kimondo88/discord-kim-bot.git"
+  },
+  "keywords": [
+    "bot",
+    "js",
+    "discord"
+  ],
+  "author": "adam \"kim\" tarczewski",
+  "license": "MIT"
+}
