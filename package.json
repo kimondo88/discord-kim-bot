@@ -4,7 +4,8 @@
   "description": "discord bot in js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./main.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,9 @@
     "discord"
   ],
   "author": "adam \"kim\" tarczewski",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0"
+  }
 }
