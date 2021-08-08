@@ -26,7 +26,7 @@ client.on("message", async msg => {
 
 console.log(process.env.TOKEN);
 
-client.login(process.env.TOKEN);
+//client.login(process.env.TOKEN);
 
 async function pogoda(msg){
   const list = msg.content.split(' '); 
@@ -75,7 +75,9 @@ async function help(msg){
       return msg.channel.send(`pogoda gets 2 arguments: city, and country. Example $pogoda london uk`);
     }else{
       return msg.channel.send(
-        `Here is list of available commands (without prefix $): \n 
+        `Here is list of available commands (without prefix $): \n
         pogoda, obraz, help, for further information type $help <command>`
       )}
 }
+
+module.exports.help = help; 

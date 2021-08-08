@@ -109,3 +109,4 @@ dist
 # src image files
 
 img/
+test/

@@ -4,7 +4,9 @@
   "description": "discord bot in js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
+    "test:coverage": "nyc --reporter=html --reporter=text mocha",
+    "posttest:coverage": "open-cli ./coverage/index.html",
     "start": "node ./main.js"
   },
   "repository": {
@@ -23,5 +25,12 @@
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3",
+    "nyc": "^15.1.0",
+    "open-cli": "^7.0.0",
+    "sinon": "^11.1.2"
   }
 }
