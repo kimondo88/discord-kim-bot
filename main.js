@@ -4,19 +4,21 @@ const fetch = require("node-fetch");
 const dotenv = require('dotenv').config();
 const Canvas = require('canvas');
 
+const prfx = "$";
+
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`)
 }); 
 
 client.on("message", async msg => {
-  if(msg.content.startsWith("$", 0)){
-    if(msg.content.startsWith("$pogoda", 0)){
+  if(msg.content.startsWith(`${prfx}`, 0)){
+    if(msg.content.startsWith(`${prfx}pogoda`, 0)){
       pogoda(msg);
     }
-    if (msg.content === "$obraz"){
+    if (msg.content === `${prfx}obraz`){
       createCanvas(msg); 
     }
-    if (msg.content.startsWith("$help", 0)){
+    if (msg.content.startsWith(`${prfx}help`, 0)){
       help(msg);
     }
   }else {}
@@ -26,21 +28,20 @@ client.on("message", async msg => {
 
 console.log(process.env.TOKEN);
 
-//client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);
 
 async function pogoda(msg){
   const list = msg.content.split(' '); 
     if(list.length === 3 && list[2].length === 2){
       const city = list[1];
       const country = list[2];
-      return fetchWeather(city, country).then( data => msg.channel.send(data) );
+      return fetchWeather(city, country).then( data => msg.channel.send(data));
     }
 }
 
 
 async function fetchWeather(city, country, lang="pl"){
-  return await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},
-  ${country}&APPID=${process.env.WEATHERTOKEN}&lang=${lang}&units=metric`)
+  return await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${process.env.WEATHERTOKEN}&lang=${lang}&units=metric`)
   .then(res => {
     console.log(`fetching api weather for ${city}, ${country}`); 
     //console.log(res);
@@ -80,4 +81,8 @@ async function help(msg){
       )}
 }
 
-module.exports.help = help; 
+// function exp(){
+//   return {help, createCanvas}
+// }
+
+module.exports = {help, createCanvas, fetchWeather, pogoda, client}; 
