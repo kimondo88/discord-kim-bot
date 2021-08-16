@@ -3,6 +3,9 @@ const client = new Discord.Client();
 const fetch = require("node-fetch");
 const dotenv = require('dotenv').config();
 const Canvas = require('canvas');
+const { JSDOM } = require('jsdom');
+const { window } = new JSDOM(""); 
+const $ = require('jquery')( window ); 
 
 const prfx = "$";
 
@@ -15,16 +18,18 @@ client.on("message", async msg => {
     if(msg.content.startsWith(`${prfx}pogoda`, 0)){
       pogoda(msg);
     }
-    if (msg.content === `${prfx}obraz`){
+    else if (msg.content === `${prfx}obraz`){
       createCanvas(msg); 
     }
-    if (msg.content.startsWith(`${prfx}help`, 0)){
+    else if (msg.content.startsWith(`${prfx}help`, 0)){
       help(msg);
     }
+    else if (msg.content === `${prfx}rss`){
+      rss();
+    }
+
   }else {}
 });
-
-
 
 console.log(process.env.TOKEN);
 
@@ -38,7 +43,6 @@ async function pogoda(msg){
       return fetchWeather(city, country).then( data => msg.channel.send(data));
     }
 }
-
 
 async function fetchWeather(city, country, lang="pl"){
   return await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${process.env.WEATHERTOKEN}&lang=${lang}&units=metric`)
@@ -79,6 +83,18 @@ async function help(msg){
         `Here is list of available commands (without prefix $): \n
         pogoda, obraz, help, for further information type $help <command>`
       )}
+}
+
+async function rss(){
+  return await fetch('http://feeds.feedburner.com/Antyweb')
+  .then( data => {
+    const xml = $.parseXML(data);
+    return xml;
+  })
+  .then( show => {
+    console.log(show);
+    return show;
+  })
 }
 
 // function exp(){
