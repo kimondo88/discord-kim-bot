@@ -3,6 +3,7 @@ const client = new Discord.Client();
 const fetch = require("node-fetch");
 const dotenv = require('dotenv').config();
 const Canvas = require('canvas');
+const { random } = Math
 
 const prfx = "$";
 
@@ -15,11 +16,14 @@ client.on("message", async msg => {
     if(msg.content.startsWith(`${prfx}pogoda`, 0)){
       pogoda(msg);
     }
-    if (msg.content === `${prfx}obraz`){
+    else if (msg.content === `${prfx}obraz`){
       createCanvas(msg); 
     }
-    if (msg.content.startsWith(`${prfx}help`, 0)){
+    else if (msg.content.startsWith(`${prfx}help`, 0)){
       help(msg);
+    }
+    else if (msg.content === `${prfx}gacha`){
+      gacha(msg);
     }
   }else {}
 });
@@ -77,10 +81,34 @@ async function help(msg){
     }else{
       return msg.channel.send(
         `Here is list of available commands (without prefix $): \n
-        pogoda, obraz, help, for further information type $help <command>`
+        pogoda, obraz, gacha, help, for further information type $help <command>`
       )}
 }
 
+async function gacha(msg){
+  const array = [3, 7, 15, 30, 45]
+  const drops = [ 'Divine', 'Legendary', 'Epic', 'Rare', 'Common']
+  const randNumber = (random()*100).toFixed(0); 
+
+  for(let i = 0; i < array.length ; i++){
+    if(i === 0){
+      if(checkRange(randNumber, i, array[i])){
+        console.log(randNumber + drops[i]);
+        return msg.channel.send('Woah, you got: ' + drops[i]);
+      }
+    }else{
+      if(checkRange(randNumber, array[i-1]+1, array[i-1]+ array[i])){
+        console.log(randNumber + drops[i])
+        return msg.channel.send('Gacha blessed you with: ' + drops[i]);
+      }
+    }
+    
+  }
+}
+
+function checkRange(number, num0, num1){
+  return (number >= num0) && (number <= num1)
+}
 // function exp(){
 //   return {help, createCanvas}
 // }
