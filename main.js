@@ -74,6 +74,23 @@ async function createCanvas(msg){
   return msg.channel.send({ content: `Its a pepe bro, ${msg.author.username}`, files: [attachment] });
 }
 
+async function serveImage(msg, filePath, message, rarity){
+  const canvas = Canvas.createCanvas(35, 35);
+  const context = canvas.getContext('2d');
+
+  const image = await Canvas.loadImage(`./img/${filePath}.png`);
+
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  context.font = '8 px sans-serif';
+  // Select the style that will be used to fill the text in
+  context.fillStyle = '#000000';
+  context.fillText(rarity, canvas.width / 2.5, canvas.height / 1.8);
+
+  const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'result.png');
+
+  return msg.channel.send({ content: `${message}`, files: [attachment] });
+}
+
 async function help(msg){
   const list = msg.content.split(' ');
     if(list[1] === "pogoda"){
@@ -88,23 +105,21 @@ async function help(msg){
 async function gacha(msg){
   const array = [3, 7, 15, 30, 45]
   const drops = [ 'Divine', 'Legendary', 'Epic', 'Rare', 'Common']
+  const stars = ['S*', '5*', '4*', '3*', '2*']
   const randNumber = (random()*100).toFixed(0); 
+  var sum = 0;
 
   for(let i = 0; i < array.length ; i++){
-    if(i === 0){
-      if(checkRange(randNumber, i, array[i])){
-        console.log(randNumber + drops[i]);
-        return msg.channel.send('Woah, you got: ' + drops[i]);
-      }
-    }else{
-      if(checkRange(randNumber, array[i-1]+1, array[i-1]+ array[i])){
-        console.log(randNumber + drops[i])
-        return msg.channel.send('Gacha blessed you with: ' + drops[i]);
-      }
+    sum += array[i];
+    if(checkRange (randNumber, i, array[i])){
+      return await serveImage(msg, drops[i], `Woah ${msg.author.username}, you got: ` + drops[i], stars[i])
     }
-    
+    else if(checkRange(randNumber, sum + 1 - array[i], sum)){
+      return await serveImage(msg, drops[i], `Nice catch ${msg.author.username}, you got: ` + drops[i], stars[i])
+    }
   }
 }
+
 
 function checkRange(number, num0, num1){
   return (number >= num0) && (number <= num1)

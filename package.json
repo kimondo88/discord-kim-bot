@@ -1,6 +1,6 @@
 {
   "name": "discord-kim-bot",
-  "version": "1.3.0",
+  "version": "1.4.1",
   "description": "discord bot in js",
   "main": "index.js",
   "scripts": {
