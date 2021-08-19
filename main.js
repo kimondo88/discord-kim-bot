@@ -5,6 +5,10 @@ const dotenv = require('dotenv').config();
 const Canvas = require('canvas');
 const { random } = Math
 
+const MongoClient = require('mongodb').MongoClient;
+const config = require('./config.json');
+const url = config['db-url']; 
+
 const prfx = "$";
 
 client.on("ready", () => {
@@ -124,8 +128,5 @@ async function gacha(msg){
 function checkRange(number, num0, num1){
   return (number >= num0) && (number <= num1)
 }
-// function exp(){
-//   return {help, createCanvas}
-// }
 
 module.exports = {help, createCanvas, fetchWeather, pogoda, client}; 
