@@ -49,16 +49,9 @@ async function pogoda(msg){
 
 
 async function fetchWeather(city, country, lang="pl"){
-  return await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${process.env.WEATHERTOKEN}&lang=${lang}&units=metric`)
-  .then(res => {
-    console.log(`fetching api weather for ${city}, ${country}`); 
-    //console.log(res);
-    return res.json(); 
-  })
-  .then(data => {
-    //console.log(data); 
-    return JSON.stringify(data); 
-  })
+  const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${process.env.WEATHERTOKEN}&lang=${lang}&units=metric`);
+  const res = await data.json();
+  return JSON.stringify(res)
 }
 
 async function createCanvas(msg){
