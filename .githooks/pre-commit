@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# ensure if status return non-zero code it will not commit
+set -e
+# run mocha test to test code
+npm test
