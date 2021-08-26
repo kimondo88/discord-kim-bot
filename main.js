@@ -1,13 +1,13 @@
 const Discord = require("discord.js")
 const client = new Discord.Client();
-const fetch = require("node-fetch");
-const dotenv = require('dotenv').config();
-const Canvas = require('canvas');
-const { random } = Math
+const { random } = Math;
+const { pogoda } = require('./util/weather');
+const { serveImage, createCanvas} = require('./util/serveimg');
 
 const MongoClient = require('mongodb').MongoClient;
 const config = require('./config.json');
 const url = config['db-url']; 
+const { TOKEN } = config;
 
 const prfx = "$";
 
@@ -32,61 +32,7 @@ client.on("message", async msg => {
   }else {}
 });
 
-
-
-console.log(process.env.TOKEN);
-
-client.login(process.env.TOKEN);
-
-async function pogoda(msg){
-  const list = msg.content.split(' '); 
-    if(list.length === 3 && list[2].length === 2){
-      const city = list[1];
-      const country = list[2];
-      return fetchWeather(city, country).then( data => msg.channel.send(data));
-    }
-}
-
-
-async function fetchWeather(city, country, lang="pl"){
-  const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${process.env.WEATHERTOKEN}&lang=${lang}&units=metric`);
-  const res = await data.json();
-  return JSON.stringify(res)
-}
-
-async function createCanvas(msg){
-  const canvas = Canvas.createCanvas(100, 100);
-  const context = canvas.getContext('2d');
-
-  const pepe = await Canvas.loadImage('./img/pepe.jpg');
-
-  context.drawImage(pepe, 0, 0, canvas.width, canvas.height);
-  context.font = '20px sans-serif';
-  // Select the style that will be used to fill the text in
-  context.fillStyle = '#ffffff';
-  context.fillText('THE PEPE', canvas.width / 2.5, canvas.height / 1.8);
-
-  const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-to-pepe.png');
-
-  return msg.channel.send({ content: `Its a pepe bro, ${msg.author.username}`, files: [attachment] });
-}
-
-async function serveImage(msg, filePath, message, rarity){
-  const canvas = Canvas.createCanvas(35, 35);
-  const context = canvas.getContext('2d');
-
-  const image = await Canvas.loadImage(`./img/${filePath}.png`);
-
-  context.drawImage(image, 0, 0, canvas.width, canvas.height);
-  context.font = '8 px sans-serif';
-  // Select the style that will be used to fill the text in
-  context.fillStyle = '#000000';
-  context.fillText(rarity, canvas.width / 2.5, canvas.height / 1.8);
-
-  const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'result.png');
-
-  return msg.channel.send({ content: `${message}`, files: [attachment] });
-}
+client.login(TOKEN);
 
 async function help(msg){
   const list = msg.content.split(' ');
@@ -117,9 +63,8 @@ async function gacha(msg){
   }
 }
 
-
 function checkRange(number, num0, num1){
   return (number >= num0) && (number <= num1)
 }
 
-module.exports = {help, createCanvas, fetchWeather, pogoda, client}; 
+module.exports = {help, client}; 
