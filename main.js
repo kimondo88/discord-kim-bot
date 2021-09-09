@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const { random } = Math;
 const { pogoda } = require('./util/weather');
 const { serveImage, createCanvas} = require('./util/serveimg');
-
+const { addToDb } = require('./util/dbFunc');
 const MongoClient = require('mongodb').MongoClient;
 const config = require('./config.json');
 const url = config['db-url']; 
@@ -29,8 +29,12 @@ client.on("message", async msg => {
     else if (msg.content === `${prfx}gacha`){
       gacha(msg);
     }
+    else if(msg.content ===`${prfx}subscribe`){
+      addToDb(msg);
+    }
   }else {}
 });
+
 
 client.login(TOKEN);
 
