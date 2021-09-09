@@ -111,3 +111,4 @@ dist
 img/
 test/
 config.json
+util/rss.js

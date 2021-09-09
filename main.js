@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const { random } = Math;
 const { pogoda } = require('./util/weather');
 const { serveImage, createCanvas} = require('./util/serveimg');
-const { addToDb } = require('./util/dbFunc');
+const { addToDb, subtract, isSubscribed, balance } = require('./util/dbFunc');
 const MongoClient = require('mongodb').MongoClient;
 const config = require('./config.json');
 const url = config['db-url']; 
@@ -26,8 +26,16 @@ client.on("message", async msg => {
     else if (msg.content.startsWith(`${prfx}help`, 0)){
       help(msg);
     }
+    else if (msg.content === `${prfx}credits`){
+      balance(msg); 
+    }
     else if (msg.content === `${prfx}gacha`){
-      gacha(msg);
+      if(isSubscribed(msg.author)){
+        gacha(msg);
+        subtract(msg, 200);
+      }else{
+        msg.channel.send('Not enough credits or not subscribed')
+      }
     }
     else if(msg.content ===`${prfx}subscribe`){
       addToDb(msg);

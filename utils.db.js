@@ -36,7 +36,67 @@ async function addUserToDb(author){
     }
     return text;
 }
-
+async function subtractCredits(author, howMuch){
+      const client = new MongoClient(url);
+      await client.connect();
+      const db = client.db(dbName)
+      try{
+          const checkForExist = await db.collection('enneagram').findOne({ id: author.id})
+          if(checkForExist){
+            await db.collection('enneagram')
+            .updateOne({ id: author.id}, {$inc: { credits: -howMuch}})
+            text = `Credits subtracted, amount:  ${howMuch}`; 
+          }else{
+            text =  'Not enough credits';
+          }
+      }catch(err){
+          console.error(err);
+      }finally{ 
+          client.close(); 
+          console.log("credits subtracted and connection closed"); 
+      }
+      return text;
+}
+async function checkBalance(author){
+    const client = new MongoClient(url);
+    await client.connect();
+    const db = client.db(dbName)
+    let text;
+    try{
+        const checkForExist = await db.collection('enneagram').findOne({ id: author.id})
+        if(checkForExist){
+        text = `Your balance is ${checkForExist.credits}`
+        }else{
+        text =  'Not a subscribed user';
+        }
+    }catch(err){
+        console.error(err);
+    }finally{ 
+        client.close(); 
+        console.log('balance checked'); 
+    }
+    return text;
+}
+async function isSubscribed(author){
+    const client = new MongoClient(url);
+    await client.connect();
+    const db = client.db(dbName)
+    let bool; 
+    try{
+        const checkForExist = await db.collection('enneagram').findOne({ id: author.id, credits: { $gt: 199 }})
+        if(checkForExist){
+        bool = true;
+        }else{
+        bool = false;
+        }
+    }catch(err){
+        console.error(err);
+    }finally{ 
+        client.close(); 
+        console.log('balance checked'); 
+    }
+    return bool; 
+}
 function createCollection(name){
     return new Promise(async (resolve, reject) =>{
         const client = new MongoClient(url);
@@ -51,8 +111,13 @@ function createCollection(name){
         }
     })
 }
-
-return { createCollection, addUserToDb}
+    return { 
+        createCollection, 
+        addUserToDb, 
+        subtractCredits,
+        checkBalance,
+        isSubscribed
+    };
 
 }
 
