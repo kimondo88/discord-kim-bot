@@ -3,9 +3,10 @@ const client = new Discord.Client();
 const { random } = Math;
 const { pogoda } = require('./util/weather');
 const { serveImage, createCanvas} = require('./util/serveimg');
-const { addToDb, subtract, isSubscribed, balance } = require('./util/dbFunc');
+const { addToDb, subtract, isSubscribed, balance, daily } = require('./util/dbFunc');
 const MongoClient = require('mongodb').MongoClient;
 const config = require('./config.json');
+const { addDrop } = require("./utils.db");
 const url = config['db-url']; 
 const { TOKEN } = config;
 
@@ -20,6 +21,9 @@ client.on("message", async msg => {
     if(msg.content.startsWith(`${prfx}pogoda`, 0)){
       pogoda(msg);
     }
+    else if(msg.content === `${prfx}daily`){
+      daily(msg, 1000);
+    }
     else if (msg.content === `${prfx}obraz`){
       createCanvas(msg); 
     }
@@ -30,7 +34,7 @@ client.on("message", async msg => {
       balance(msg); 
     }
     else if (msg.content === `${prfx}gacha`){
-      if(isSubscribed(msg.author)){
+      if(await isSubscribed(msg.author)){
         gacha(msg);
         subtract(msg, 200);
       }else{
@@ -67,9 +71,11 @@ async function gacha(msg){
   for(let i = 0; i < array.length ; i++){
     sum += array[i];
     if(checkRange (randNumber, i, array[i])){
+      await addDrop(msg.author, drops[i])
       return await serveImage(msg, drops[i], `Woah ${msg.author.username}, you got: ` + drops[i], stars[i])
     }
     else if(checkRange(randNumber, sum + 1 - array[i], sum)){
+      await addDrop(msg.author, drops[i])
       return await serveImage(msg, drops[i], `Nice catch ${msg.author.username}, you got: ` + drops[i], stars[i])
     }
   }

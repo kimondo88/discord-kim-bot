@@ -10,6 +10,10 @@ function dbFunc(){
         const text = await subtractCredits(msg.author, howMuch);
         return msg.channel.send(text);
     }
+    async function daily(msg, howMuch){
+        await subtractCredits(msg.author, -howMuch);
+        return msg.channel.send(`Your daily has been added to your account, amount: ${howMuch}`);
+    }
     async function balance(msg){
         const text = await checkBalance(msg.author);
         return msg.channel.send(text);
@@ -19,7 +23,8 @@ function dbFunc(){
         addToDb, 
         subtract, 
         balance,
-        isSubscribed
+        isSubscribed,
+        daily
     };
 }
 
