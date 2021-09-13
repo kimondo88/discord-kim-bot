@@ -7,3 +7,5 @@ check https://discordjs.guide/popular-topics/canvas.html before using the bot on
 There is no build script yet for production, so canvas - $obraz command will not work without prerequisities. 
 
 API key for openweather is also not public. 
+
+Added gacha command, it works with mongodb. Configure it.
